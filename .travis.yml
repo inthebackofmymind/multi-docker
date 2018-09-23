@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t inthebackofmymind/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run inthebackofmymind/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t inthebackofmymind/multi-client ./client
+  - docker build -t inthebackofmymind/multi-nginx ./nginx
+  - docker build -t inthebackofmymind/multi-server ./server
+  - docker build -t inthebackofmymind/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push inthebackofmymind/multi-client 
+  - docker push inthebackofmymind/multi-nginx 
+  - docker push inthebackofmymind/multi-server 
+  - docker push inthebackofmymind/multi-worker 
