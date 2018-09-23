@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+	"name": "client",
+	"image": "inthebackofmymind/multi-client",
+	"hostname": "client",
+	"essential": false
+    },
+    {
+	"name": "server",
+	"image": "inthebackofmymind/multi-server",
+	"hostname": "api",
+	"essential": false
+    },
+    {
+	"name": "worker",
+	"image": "inthebackofmymind/multi-worker",
+	"hostname": "worker",
+	"essential": false
+    },
+    {
+	"name": "nginx",
+	"image": "inthebackofmymind/multi-nginx",
+	"hostname": "nginx",
+	"essential": true,
+	"portMappings": [
+	 {
+	  "hostPort": 80,
+	  "containerPort": 80
+ 	 }
+ 	],
+	"links": ["client", "server"] 
+    }
+  ]  
+}
